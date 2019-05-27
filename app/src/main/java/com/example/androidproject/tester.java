@@ -26,13 +26,10 @@ public class tester {
         System.out.println("Overview:\t" + movie.getOverview());
 
 
-//        System.out.println(mrp.getTotalPages());
-//        mrp = movies.getPopularMovies("en",1);
-//        System.out.println(mrp.getResults());
-//        mrp = movies.getPopularMovies("en",2);
-//        System.out.println(mrp.getResults());
-//        mrp = movies.getPopularMovies("en",3);
-//        System.out.println(mrp.getResults());
+        for (int i = 0; i < mrp.getResults().size(); i++) {
+            int id = mrp.getResults().get(i).getId();
+            System.out.println("index: " + i + "\tID: " + id + " - " + mrp.getResults().get(i));
+        }
 
     }
 }
