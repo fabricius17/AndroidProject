@@ -27,7 +27,7 @@ public class tester {
 
 
         for (int i = 0; i < mrp.getResults().size(); i++) {
-            int id = mrp.getResults().get(i).getId();
+            id = mrp.getResults().get(i).getId();
             System.out.println("index: " + i + "\tID: " + id + " - " + mrp.getResults().get(i));
         }
 
