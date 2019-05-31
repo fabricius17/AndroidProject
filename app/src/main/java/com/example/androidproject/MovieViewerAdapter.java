@@ -28,6 +28,14 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
         public ViewHolder(View v) {
             super(v);
             imageView = v.findViewById(R.id.ivCell);
+            // Add an onClickListener so that an image is clickable
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println(imageView.getContentDescription());
+//                    MainActivity.startFragment();
+                }
+            });
         }
     }
 
@@ -47,9 +55,16 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     @Override
     public void onBindViewHolder(@NonNull MovieViewerAdapter.ViewHolder viewHolder, int i) {
         String posterPath = movies.get(i).getPosterPath();
+
+        //Adds the ID of the movie to contentdescription, because why not
+        int id = movies.get(i).getId();
+        String idAsString = Integer.toString(id);
+        viewHolder.imageView.setContentDescription(idAsString);
+
         Glide.with(context).clear(viewHolder.imageView);
         String urlToCall = String.format("https://image.tmdb.org/t/p/w500%s", posterPath);
         Glide.with(context).load(urlToCall).into(viewHolder.imageView);
+//        System.out.println(viewHolder.imageView.getContentDescription());
     }
 
     @Override
