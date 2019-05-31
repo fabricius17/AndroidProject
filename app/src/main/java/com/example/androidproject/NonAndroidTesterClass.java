@@ -18,7 +18,7 @@ public class NonAndroidTesterClass {
 //        }
         // Test respons tid på at hente en håndfuld film og info omkring disse film
         long startTime = System.currentTimeMillis();
-        TmdbMovies film = APIConnection.getTmdbMovies().getMovies();
+        TmdbMovies film = APIConnection.getTmdbMovies();
 
         int totalMoviesFetched = 0;
         int number = 1;
