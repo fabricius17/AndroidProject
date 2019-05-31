@@ -10,7 +10,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +32,13 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     }
 
     public MovieViewerAdapter(Context context) {
-        System.out.println("CONSTRUCTOR");
-        movies=getMovies();
+        movies = getMovies();
         this.context = context;
     }
 
     @NonNull
     @Override
     public MovieViewerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-//        return null;
-        System.out.println("ONCREATEVIEWHOLDER");
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
@@ -50,11 +46,7 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewerAdapter.ViewHolder viewHolder, int i) {
-//        String posterPath = "";
-//        for (; i < movies.size(); ) {
-        System.out.println("ONBINDVIEWHOLDER");
         String posterPath = movies.get(i).getPosterPath();
-//        }
         Glide.with(context).clear(viewHolder.imageView);
         String urlToCall = String.format("https://image.tmdb.org/t/p/w500%s", posterPath);
         Glide.with(context).load(urlToCall).into(viewHolder.imageView);
@@ -62,7 +54,6 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
 
     @Override
     public int getItemCount() {
-        System.out.println("GETITEMCOUNT");
         return movies.size();
     }
 
@@ -70,16 +61,11 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
         TmdbMovies allMovies = APIConnection.getConnection().getMovies();
         MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
         List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
-        //Skal ændres til noget andet
-        List<MovieDb> MWP = new ArrayList<>();
+        List<MovieDb> moviesWithPictures = new ArrayList<>();
         for (int i = 0; i < moviesWithoutPictures.size(); i++) {
             int id = moviesWithoutPictures.get(i).getId();
-            MovieDb movie = allMovies.getMovie(id,"en");
-            System.out.printf("Title: %s\t%s\t%s\t%s\t%s\n", movie.getTitle(),
-                    movie.getReleaseDate(), movie.getHomepage(),
-                    movie.getBudget(), movie.getGenres(), movie.getOverview());
-            MWP.add(allMovies.getMovie(id, "en"));
+            moviesWithPictures.add(allMovies.getMovie(id, "en"));
         }
-        return MWP;
+        return moviesWithPictures;
     }
 }
