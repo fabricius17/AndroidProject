@@ -58,7 +58,7 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     }
 
     private List<MovieDb> getMovies() {
-        TmdbMovies allMovies = APIConnection.getConnection().getMovies();
+        TmdbMovies allMovies = APIConnection.getTmdbMovies();
         MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
         List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
         List<MovieDb> moviesWithPictures = new ArrayList<>();
