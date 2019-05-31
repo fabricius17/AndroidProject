@@ -10,16 +10,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.model.MovieDb;
-import info.movito.themoviedbapi.model.core.MovieResultsPage;
 
 public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.ViewHolder> {
     private List<MovieDb> movies;
     private Context context;
+    private MovieDb movie;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -40,7 +38,7 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     }
 
     public MovieViewerAdapter(Context context) {
-        movies = getMovies();
+        // movies = getMovies();
         this.context = context;
     }
 
@@ -69,18 +67,14 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
 
     @Override
     public int getItemCount() {
+        movies = APIConnection.movies;
         return movies.size();
     }
 
-    private List<MovieDb> getMovies() {
-        TmdbMovies allMovies = APIConnection.getTmdbMovies();
-        MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
-        List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
-        List<MovieDb> moviesWithPictures = new ArrayList<>();
-        for (int i = 0; i < moviesWithoutPictures.size(); i++) {
-            int id = moviesWithoutPictures.get(i).getId();
-            moviesWithPictures.add(allMovies.getMovie(id, "en"));
-        }
-        return moviesWithPictures;
+    public void addToMovies(MovieDb movie) {
+        this.movie = movie;
+        movies.add(movie);
     }
+
+
 }
