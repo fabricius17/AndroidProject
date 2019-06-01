@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">AndroidProject</string>
+    <string name="app_name">Android Project</string>
+    <string name="title">Title of the movie</string>
+    <string name="intent_key">movies</string>
+    <string name="intent_value">film</string>
+    <string name="bundle_key">movie</string>
 </resources>

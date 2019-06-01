@@ -1,12 +1,19 @@
 package com.example.androidproject;
 
+import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import info.movito.themoviedbapi.TmdbMovies;
@@ -39,7 +46,21 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MovieViewerAdapter(getApplicationContext());
         recyclerView.setAdapter(adapter);
         new AsyncTmdbMovies().execute();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver,
+                new IntentFilter(getString(R.string.intent_key)));
     }
+
+    public BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MovieDb movie = (MovieDb) intent.getSerializableExtra(getString(R.string.intent_value));
+//            System.out.printf("Title: %s\t%s\t%s\t%s\t%s\t%s\t%s\n", movie.getTitle(),
+//                    movie.getReleaseDate(), movie.getHomepage(),
+//                    movie.getBudget(), movie.getGenres(), movie.getOverview(),movie.getBackdropPath());
+            startFragment(movie);
+        }
+    };
 
     public class AsyncTmdbMovies extends AsyncTask<List, Integer, List> {
 
@@ -55,10 +76,13 @@ public class MainActivity extends AppCompatActivity {
             TmdbMovies allMovies = movies;
             MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
             List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
+
             for (int i = 0; i < moviesWithoutPictures.size(); i++) {
-                MovieDb movie = moviesWithoutPictures.get(i);
+//                MovieDb movie = moviesWithoutPictures.get(i);
                 int id = moviesWithoutPictures.get(i).getId();
-                APIConnection.movies.add(movie);
+                MovieDb realMovie = allMovies.getMovie(id, "en");
+                APIConnection.movies.add(realMovie);
+//                APIConnection.movies.add(movie);
 
                 adapter.notifyItemInserted(adapter.getItemCount() - 1);
 
@@ -72,5 +96,27 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List list) {
 
         }
+
+    }
+
+    public void startFragment(MovieDb movie) {
+//        System.out.println("In startFragment method");
+        HashMap<String, String> movieInfo = new HashMap<>();
+        movieInfo.put("backdrop", movie.getBackdropPath());
+        movieInfo.put("title", movie.getTitle());
+        movieInfo.put("release",movie.getReleaseDate());
+        movieInfo.put("overview",movie.getOverview());
+        movieInfo.put("homepage",movie.getHomepage());
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getString(R.string.bundle_key),movieInfo);
+//        FragmentManager fm = getFragmentManager();
+        MovieFragment movieFragment = new MovieFragment();
+        movieFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.replace(android.R.id.content, movieFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }
