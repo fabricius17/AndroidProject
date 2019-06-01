@@ -1,15 +1,19 @@
 package com.example.androidproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
 import java.util.List;
 
 import info.movito.themoviedbapi.model.MovieDb;
@@ -20,7 +24,7 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     private MovieDb movie;
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements Serializable {
         public ImageView imageView;
 
         public ViewHolder(View v) {
@@ -30,8 +34,25 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println(imageView.getContentDescription());
-//                    MainActivity.startFragment();
+                    int idToSearch = Integer.parseInt(String.valueOf(imageView.getContentDescription()));
+                    MovieDb intentMovie = null;
+                    for (int i = 0; i < movies.size(); i++) {
+                        int id = movies.get(i).getId();
+                        if (id == idToSearch) {
+                            intentMovie = movies.get(i);
+                            break;
+                        }
+                    }
+                    // Starts a localbroadcast so that it can be received in MainActivity
+                    if (intentMovie == null) {
+                        // Make a toast in case something goes wrong
+                        CharSequence text = "Something went wrong, please restart app!";
+                        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Intent intent = new Intent(context.getString(R.string.intent_key));
+                        intent.putExtra(context.getString(R.string.intent_value), intentMovie);
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    }
                 }
             });
         }
@@ -53,7 +74,6 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     @Override
     public void onBindViewHolder(@NonNull MovieViewerAdapter.ViewHolder viewHolder, int i) {
         String posterPath = movies.get(i).getPosterPath();
-
         //Adds the ID of the movie to contentdescription, because why not
         int id = movies.get(i).getId();
         String idAsString = Integer.toString(id);
@@ -75,6 +95,5 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
         this.movie = movie;
         movies.add(movie);
     }
-
 
 }

@@ -2,10 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@android:color/white"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/linear_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -32,7 +32,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/movie_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Release Date:" />
@@ -45,7 +44,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/movie_overview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -57,26 +55,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="14sp"
-            tools:text="This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. " />
+            android:text="This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. This is the overview. "
+            android:textSize="14sp" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/movie_homepage_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="Homepage:" />
+                android:text="Homepage:" />
 
             <TextView
                 android:id="@+id/movie_homepage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="localhost" />
+                android:autoLink="web"
+                android:text="localhost" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
