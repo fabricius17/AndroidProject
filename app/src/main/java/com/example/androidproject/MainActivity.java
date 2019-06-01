@@ -55,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             MovieDb movie = (MovieDb) intent.getSerializableExtra(getString(R.string.intent_value));
-//            System.out.printf("Title: %s\t%s\t%s\t%s\t%s\t%s\t%s\n", movie.getTitle(),
-//                    movie.getReleaseDate(), movie.getHomepage(),
-//                    movie.getBudget(), movie.getGenres(), movie.getOverview(),movie.getBackdropPath());
             startFragment(movie);
         }
     };
@@ -78,11 +75,9 @@ public class MainActivity extends AppCompatActivity {
             List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
 
             for (int i = 0; i < moviesWithoutPictures.size(); i++) {
-//                MovieDb movie = moviesWithoutPictures.get(i);
                 int id = moviesWithoutPictures.get(i).getId();
                 MovieDb realMovie = allMovies.getMovie(id, "en");
                 APIConnection.movies.add(realMovie);
-//                APIConnection.movies.add(movie);
 
                 adapter.notifyItemInserted(adapter.getItemCount() - 1);
 
@@ -100,17 +95,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startFragment(MovieDb movie) {
-//        System.out.println("In startFragment method");
         HashMap<String, String> movieInfo = new HashMap<>();
         movieInfo.put("backdrop", movie.getBackdropPath());
         movieInfo.put("title", movie.getTitle());
-        movieInfo.put("release",movie.getReleaseDate());
-        movieInfo.put("overview",movie.getOverview());
-        movieInfo.put("homepage",movie.getHomepage());
+        movieInfo.put("release", movie.getReleaseDate());
+        movieInfo.put("overview", movie.getOverview());
+        movieInfo.put("homepage", movie.getHomepage());
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getString(R.string.bundle_key),movieInfo);
-//        FragmentManager fm = getFragmentManager();
+        bundle.putSerializable(getString(R.string.bundle_key), movieInfo);
+
         MovieFragment movieFragment = new MovieFragment();
         movieFragment.setArguments(bundle);
 

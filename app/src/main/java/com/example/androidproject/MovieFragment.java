@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,7 @@ public class MovieFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
-        Bundle arguments = getArguments();
+        arguments = getArguments();
 
         if (arguments == null) {
             CharSequence text = "Could not load movie details!";
@@ -56,22 +55,18 @@ public class MovieFragment extends Fragment {
             title = view.findViewById(R.id.movie_title);
             title.setText(movieInfo.get("title"));
 
-            releaseDate=view.findViewById(R.id.release_date);
+            releaseDate = view.findViewById(R.id.release_date);
             releaseDate.setText(movieInfo.get("release"));
 
-            overview=view.findViewById(R.id.movie_overview);
+            overview = view.findViewById(R.id.movie_overview);
             overview.setText(movieInfo.get("overview"));
 
-            homepage=view.findViewById(R.id.movie_homepage);
-//            homepage.setMovementMethod(LinkMovementMethod.getInstance());
-            homepage.setText(movieInfo.get("homepage"));
+            homepage = view.findViewById(R.id.movie_homepage);
+            String homepageText = movieInfo.get("homepage");
+            if (homepageText == null) {
+                homepageText = "No homepage for this movie";
+            }
+            homepage.setText(homepageText);
         }
     }
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//
-//
-//        super.onActivityCreated(savedInstanceState);
-//
-//    }
 }
