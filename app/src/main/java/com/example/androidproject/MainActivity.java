@@ -73,15 +73,18 @@ public class MainActivity extends AppCompatActivity {
             TmdbMovies allMovies = movies;
             MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
             List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
-
+            long time = System.currentTimeMillis();
             for (int i = 0; i < moviesWithoutPictures.size(); i++) {
                 int id = moviesWithoutPictures.get(i).getId();
-                MovieDb realMovie = allMovies.getMovie(id, "en");
-                APIConnection.movies.add(realMovie);
+                try {
+                    MovieDb realMovie = allMovies.getMovie(id, "en");
+                    APIConnection.movies.add(realMovie);
+                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                } catch (RuntimeException e) {
 
-                adapter.notifyItemInserted(adapter.getItemCount() - 1);
-
+                }
             }
+            System.out.println(System.currentTimeMillis() - time);
             loading = false;
             return movieDbList;
 
