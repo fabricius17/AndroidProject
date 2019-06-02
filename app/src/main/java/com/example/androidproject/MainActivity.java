@@ -71,20 +71,21 @@ public class MainActivity extends AppCompatActivity {
                 movieDbList = new ArrayList<>();
             }
             TmdbMovies allMovies = movies;
-            MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
-            List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
-            long time = System.currentTimeMillis();
-            for (int i = 0; i < moviesWithoutPictures.size(); i++) {
-                int id = moviesWithoutPictures.get(i).getId();
-                try {
-                    MovieDb realMovie = allMovies.getMovie(id, "en");
-                    APIConnection.movies.add(realMovie);
-                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
-                } catch (RuntimeException e) {
+            // Fetch 100 movies
+            for (int j = 1; j <= 5; j++) {
+                MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", j);
+                List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
+                for (int i = 0; i < moviesWithoutPictures.size(); i++) {
+                    int id = moviesWithoutPictures.get(i).getId();
+                    try {
+                        MovieDb realMovie = allMovies.getMovie(id, "en");
+                        APIConnection.movies.add(realMovie);
+                        adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                    } catch (RuntimeException e) {
 
+                    }
                 }
             }
-            System.out.println(System.currentTimeMillis() - time);
             loading = false;
             return movieDbList;
 
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         movieInfo.put("release", movie.getReleaseDate());
         movieInfo.put("overview", movie.getOverview());
         movieInfo.put("homepage", movie.getHomepage());
+        movieInfo.put("id",Integer.toString(movie.getId()));
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.bundle_key), movieInfo);

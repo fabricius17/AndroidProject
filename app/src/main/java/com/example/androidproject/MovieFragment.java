@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v7.content.res.AppCompatResources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.androidproject.Database.AppDatabase;
+import com.example.androidproject.Database.Favorite;
 
 import java.util.HashMap;
 
 public class MovieFragment extends Fragment {
     private View view;
     private Bundle arguments;
+    private Integer id;
+    private AppDatabase database;
 
+    private ImageView favorite;
     private ImageView backdrop;
     private TextView title;
     private TextView releaseDate;
@@ -42,7 +48,7 @@ public class MovieFragment extends Fragment {
             CharSequence text = "Could not load movie details!";
             Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
         } else {
-            HashMap<String, String> movieInfo = (HashMap) arguments.getSerializable(getString(R.string.bundle_key));
+            final HashMap<String, String> movieInfo = (HashMap) arguments.getSerializable(getString(R.string.bundle_key));
 
             //Set backdrop here
             backdrop = view.findViewById(R.id.movie_backdrop);
@@ -50,6 +56,23 @@ public class MovieFragment extends Fragment {
             Glide.with(view).clear(backdrop);
             String urlToBackdrop = String.format("https://image.tmdb.org/t/p/w500%s", backdropPath);
             Glide.with(view).load(urlToBackdrop).into(backdrop);
+
+            // Initialie integer, id, for usage in addToFavorite()
+            id = Integer.parseInt(movieInfo.get("id"));
+
+            // Initializing the favorite icon
+            favorite = view.findViewById(R.id.movie_favorite);
+            database = AppDatabase.getAppDatabase(getContext());
+            if (database.favoriteDAO().getFavorite(id) != null) {
+                favorite.setImageDrawable(AppCompatResources.getDrawable(getContext(), android.R.drawable.btn_star_big_on));
+            } else {
+                favorite.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        addToFavorite(view);
+                    }
+                });
+            }
 
             // Insert all the information
             title = view.findViewById(R.id.movie_title);
@@ -68,5 +91,27 @@ public class MovieFragment extends Fragment {
             }
             homepage.setText(homepageText);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void addToFavorite(View view) {
+        String movieTitle = title.getText().toString();
+        database = AppDatabase.getAppDatabase(getContext());
+
+        Favorite favoritemovie = new Favorite();
+        favoritemovie.mid = id;
+        database.favoriteDAO().addFavorite(favoritemovie);
+        CharSequence text = movieTitle + " added to your favorites";
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+        favorite.setImageDrawable(AppCompatResources.getDrawable(getContext(), android.R.drawable.btn_star_big_on));
+//        System.out.println(id);
+//        db.favoriteDAO().addFavorite(id);
+
+//        System.out.println(db.favoriteDAO().getFavorite(id).mid);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
     }
 }
