@@ -71,16 +71,18 @@ public class MainActivity extends AppCompatActivity {
                 movieDbList = new ArrayList<>();
             }
             TmdbMovies allMovies = movies;
-            MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", 1);
-            List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
+            for (int j = 1; j <= 1; j++) {
 
-            for (int i = 0; i < moviesWithoutPictures.size(); i++) {
-                int id = moviesWithoutPictures.get(i).getId();
-                MovieDb realMovie = allMovies.getMovie(id, "en");
-                APIConnection.movies.add(realMovie);
+                MovieResultsPage movieResultsPage = allMovies.getPopularMovies("en", j);
+                List<MovieDb> moviesWithoutPictures = movieResultsPage.getResults();
 
-                adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                for (int i = 0; i < moviesWithoutPictures.size(); i++) {
+                    int id = moviesWithoutPictures.get(i).getId();
+                    MovieDb realMovie = allMovies.getMovie(id, "en");
+                    APIConnection.movies.add(realMovie);
 
+                    adapter.notifyItemInserted(adapter.getItemCount() - 1);
+                }
             }
             loading = false;
             return movieDbList;
