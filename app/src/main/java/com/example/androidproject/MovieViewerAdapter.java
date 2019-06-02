@@ -21,8 +21,6 @@ import info.movito.themoviedbapi.model.MovieDb;
 public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.ViewHolder> {
     private List<MovieDb> movies;
     private Context context;
-    private MovieDb movie;
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements Serializable {
         public ImageView imageView;
@@ -59,7 +57,6 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     }
 
     public MovieViewerAdapter(Context context) {
-        // movies = getMovies();
         this.context = context;
     }
 
@@ -74,26 +71,19 @@ public class MovieViewerAdapter extends RecyclerView.Adapter<MovieViewerAdapter.
     @Override
     public void onBindViewHolder(@NonNull MovieViewerAdapter.ViewHolder viewHolder, int i) {
         String posterPath = movies.get(i).getPosterPath();
-        //Adds the ID of the movie to contentdescription, because why not
         int id = movies.get(i).getId();
         String idAsString = Integer.toString(id);
         viewHolder.imageView.setContentDescription(idAsString);
 
         Glide.with(context).clear(viewHolder.imageView);
-        String urlToCall = String.format("https://image.tmdb.org/t/p/w500%s", posterPath);
-        Glide.with(context).load(urlToCall).into(viewHolder.imageView);
-//        System.out.println(viewHolder.imageView.getContentDescription());
+        String urlToPoster = String.format("https://image.tmdb.org/t/p/w500%s", posterPath);
+        Glide.with(context).load(urlToPoster).into(viewHolder.imageView);
     }
 
     @Override
     public int getItemCount() {
         movies = APIConnection.movies;
         return movies.size();
-    }
-
-    public void addToMovies(MovieDb movie) {
-        this.movie = movie;
-        movies.add(movie);
     }
 
 }

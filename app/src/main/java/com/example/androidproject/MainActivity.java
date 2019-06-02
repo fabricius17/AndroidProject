@@ -28,13 +28,6 @@ public class MainActivity extends AppCompatActivity {
     List<MovieDb> movieDbList;
     boolean loading = true;
 
-    public List<MovieDb> getMovies() {
-        if (movieDbList == null) {
-            new AsyncTmdbMovies().execute();
-        }
-        return movieDbList;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         movieInfo.put("release", movie.getReleaseDate());
         movieInfo.put("overview", movie.getOverview());
         movieInfo.put("homepage", movie.getHomepage());
-        movieInfo.put("id",Integer.toString(movie.getId()));
+        movieInfo.put("id", Integer.toString(movie.getId()));
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.bundle_key), movieInfo);

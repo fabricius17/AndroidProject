@@ -30,6 +30,7 @@ public class MovieFragment extends Fragment {
     private TextView releaseDate;
     private TextView overview;
     private TextView homepage;
+    private TextView favoriteTextView;
 
     @Override
 
@@ -57,13 +58,16 @@ public class MovieFragment extends Fragment {
             String urlToBackdrop = String.format("https://image.tmdb.org/t/p/w500%s", backdropPath);
             Glide.with(view).load(urlToBackdrop).into(backdrop);
 
-            // Initialie integer, id, for usage in addToFavorite()
+            // Initialize integer, id, for usage in addToFavorite()
             id = Integer.parseInt(movieInfo.get("id"));
 
-            // Initializing the favorite icon
+            // Initializing the favorite icon and textView
             favorite = view.findViewById(R.id.movie_favorite);
             database = AppDatabase.getAppDatabase(getContext());
+
+            favoriteTextView = view.findViewById(R.id.favorite_textview);
             if (database.favoriteDAO().getFavorite(id) != null) {
+                favoriteTextView.setText("This movie is your favorite");
                 favorite.setImageDrawable(AppCompatResources.getDrawable(getContext(), android.R.drawable.btn_star_big_on));
             } else {
                 favorite.setOnClickListener(new View.OnClickListener() {
@@ -97,17 +101,15 @@ public class MovieFragment extends Fragment {
     public void addToFavorite(View view) {
         String movieTitle = title.getText().toString();
         database = AppDatabase.getAppDatabase(getContext());
-
         Favorite favoritemovie = new Favorite();
         favoritemovie.mid = id;
         database.favoriteDAO().addFavorite(favoritemovie);
         CharSequence text = movieTitle + " added to your favorites";
         Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-        favorite.setImageDrawable(AppCompatResources.getDrawable(getContext(), android.R.drawable.btn_star_big_on));
-//        System.out.println(id);
-//        db.favoriteDAO().addFavorite(id);
 
-//        System.out.println(db.favoriteDAO().getFavorite(id).mid);
+        // update UI elements
+        favoriteTextView.setText("This movie is your favorite");
+        favorite.setImageDrawable(AppCompatResources.getDrawable(getContext(), android.R.drawable.btn_star_big_on));
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
